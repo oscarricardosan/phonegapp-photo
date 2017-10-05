@@ -11,21 +11,26 @@
 
     <script type="text/javascript" src="cordova.js"></script>
 
+    <img id="myImage" style="width: 100%; height: 50%">
 
+    <button onclick="takeFoto()">Take</button>
 </head>
 <body>
 
     <script>
-        navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
-            destinationType: Camera.DestinationType.FILE_URI });
+        function takeFoto() {
 
-        function onSuccess(imageURI) {
-            var image = document.getElementById('myImage');
-            image.src = imageURI;
-        }
+            navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
+                destinationType: Camera.DestinationType.FILE_URI });
 
-        function onFail(message) {
-            alert('Failed because: ' + message);
+            function onSuccess(imageURI) {
+                var image = document.getElementById('myImage');
+                image.src = imageURI;
+            }
+
+            function onFail(message) {
+                alert('Failed because: ' + message);
+            }
         }
     </script>
     <script type="text/javascript" src="js/index.js?6"></script>
