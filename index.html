@@ -11,28 +11,72 @@
 
     <script type="text/javascript" src="cordova.js"></script>
 
+    <!-- JQUERY -->
+    <script src="resources/bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
+
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet" href="resources/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <script src="resources/bower_components/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <!-- BOOTSTRAP-VALIDATOR -->
+    <script src="resources/bower_components/bootstrap-validator/dist/validator.min.js" type="text/javascript"></script>
+
+    <!-- FONTAWESOME -->
+    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
 <body style="text-align: center">
-    <h3>Take photo</h3>
-    <img id="myImage" src="camera.jpg" style="width: 100%;">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>Take photo</h3>
+                <img id="myImage" src="camera.jpg" style="width: 100%;">
 
-    <button onclick="takeFoto()">Take</button>
+                <button id="takePhoto" class="btn btn-block btn-primary">Take</button>
+                <button id="sendPhoto" class="btn btn-block btn-success">Send</button>
+                <p id="message">
+
+                </p>
+            </div>
+        </div>
+    </div>
 
     <script>
-        function takeFoto() {
+        $(document).ready(function(){
+            var currentUriInImage;
+            $('#takePhoto').click(function(){
+                navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
+                    destinationType: Camera.DestinationType.FILE_URI });
 
-            navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
-                destinationType: Camera.DestinationType.FILE_URI });
+                function onSuccess(imageURI) {
+                    currentUriInImage= imageURI;
+                    var image = document.getElementById('myImage');
+                    image.src = imageURI;
+                    $('#message').html(currentUriInImage);
+                }
 
-            function onSuccess(imageURI) {
-                var image = document.getElementById('myImage');
-                image.src = imageURI;
-            }
+                function onFail(message) {
+                    alert('Failed because: ' + message);
+                }
+            });
 
-            function onFail(message) {
-                alert('Failed because: ' + message);
-            }
-        }
+            $('#sendPhoto').click(function(){
+                $('#message').html('sending');
+                var request = $.ajax({
+                    url: "http://myserver/storePhoto.php",
+                    type: 'post',
+                    dataType: "json",
+                    data: {
+                        currentUriInImage: currentUriInImage
+                    }
+                });
+                request.done(function(respon){
+                    alert(respon.message);
+                });
+                request.fail(function(jqXHR, textStatus) {
+                    alert('Error');
+                });
+            });
+        });
     </script>
     <script type="text/javascript" src="js/index.js?6"></script>
 
