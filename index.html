@@ -51,7 +51,7 @@
                     dataUriImage= "data:image/jpeg;base64," + imageData;
                     var image = document.getElementById('myImage');
                     image.src = dataUriImage;
-                    $('#message').html(currentUriInImage);
+                    $('#message').html(dataUriImage);
                 }
 
                 function onFail(message) {
